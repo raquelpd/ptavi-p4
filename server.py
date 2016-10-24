@@ -20,17 +20,22 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
         PORT = self.client_address[1]
         print('PORT: ' + str(PORT))        
 
-        for line in self.rfile:    #rfile: Leer fichero
-            LINE = line.decode('utf-8')
-            print("El cliente nos manda ",LINE)
-            if LINE.split(' ')[0] == "REGISTER" :
-                DIRECTION = LINE.split(' ')[1]
-                print('Direction: ' + DIRECTION)
-                self.dict[DIRECTION] = IP
-                #for direcciones in self.dict :
-                #    print(direcciones)
-                #    print(IP)
-            self.wfile.write(b' SIP/2.0 200 OK\r\n\r\n')
+
+        line = self.rfile.read()
+        LINE = line.decode('utf-8')
+        print("El cliente nos manda " + LINE)
+              
+        if LINE.split(' ')[0] == "REGISTER" :
+            SIP = LINE.split(' ')[1]
+            DIRECTION = SIP.split(':')[1]
+            print('Direction: ' + DIRECTION)
+            self.dict[DIRECTION] = IP
+            #for direcciones in self.dict :
+            #   print(direcciones)
+            #   print(IP)
+            print(self.dict)
+        self.wfile.write(b' SIP/2.0 200 OK\r\n\r\n')
+
             
 
 if __name__ == "__main__":
